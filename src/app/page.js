@@ -1,14 +1,20 @@
 "use client";
 import { Button, Checkbox, Form, Input, Alert } from "antd";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
+
 export default function Home() {
+  const router = useRouter();
   const [login, setLogin] = useState(false);
   const onFinish = (values) => {
     if (values.email && values.password) {
       setLogin(true);
+      router.push("/dashboard");
     }
-    console.log("Success:", values, login);
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);

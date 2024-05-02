@@ -1,6 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-import { Space, Table, Tag } from "antd";
+import { Space, Table, Tag, Select } from "antd";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import { useStore } from "zustand";
+
+const notify = () =>
+  toast.success("Task successfully updated !", {
+    position: "top-center",
+  });
+
 const columns = [
   {
     title: "Title",
@@ -9,15 +18,11 @@ const columns = [
     render: (text) => <p>{text}</p>,
   },
   {
-    title: "Description",
-    dataIndex: "description",
-    key: "description",
+    title: "Details",
+    dataIndex: "details",
+    key: "details",
   },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
+
   {
     title: "Deadline",
     dataIndex: "deadline",
@@ -46,55 +51,62 @@ const columns = [
   {
     title: "Status",
     key: "status",
-    render: (_, record) => (
-      <Space size="middle">
-        <a> {record.status}</a>
-      </Space>
-    ),
-  },
-];
-const data = [
-  {
-    key: "1",
-    title: "John Brown",
-    description: 32,
-    address: "New York No. 1 Lake Park",
-    assignedMembers: ["Rasel", "Rony"],
-    deadline: "25.05.2024",
-    status: "pending",
-  },
-  {
-    key: "1",
-    title: "John Brown",
-    description: 32,
-    address: "New York No. 1 Lake Park",
-    assignedMembers: ["Rasel", "Rony"],
-    deadline: "25.05.2024",
-    status: "pending",
-  },
-  {
-    key: "1",
-    title: "John Brown",
-    description: 32,
-    address: "New York No. 1 Lake Park",
-    assignedMembers: ["Rasel", "Rony"],
-    deadline: "25.05.2024",
-    status: "pending",
-  },
-  {
-    key: "1",
-    title: "John Brown",
-    description: 32,
-    address: "New York No. 1 Lake Park",
-    assignedMembers: ["Rasel", "Rony"],
-    deadline: "25.05.2024",
-    status: "pending",
+    render: (_, record) => {
+      const handleChange = async (value) => {
+        const upData = { ...record, status: value };
+
+        try {
+          const res = await axios.patch(
+            `https://pc-builder-sand.vercel.app/api/v1/assignTask/${record?._id}`,
+            upData
+          );
+          if (res.data.status === "success") {
+            notify();
+          }
+        } catch (err) {}
+
+        console.log(`selected ${value}`, res);
+      };
+      return (
+        <Space size="middle">
+          <Select
+            defaultValue={record.status}
+            style={{ width: 120 }}
+            onChange={handleChange}
+            options={[
+              { value: "To Do", label: "To Do" },
+              { value: "In Progress", label: "In Progress" },
+              { value: "Done", label: "Done" },
+            ]}
+          />
+        </Space>
+      );
+    },
   },
 ];
 
 function Tasks() {
+  const [data, setData] = useState([]);
+
+  // const AssignTasks = useStore((state) => state.tasks);
+  // const setTaskData = useStore((state) => state.setTasks);
+  const fetchData = async () => {
+    const res = await axios.get(
+      "https://pc-builder-sand.vercel.app/api/v1/assignTask"
+    );
+    // console.log("res", res);
+
+    setData(res?.data?.data);
+    // setTaskData(res?.data?.data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div className="max-lg:overflow-x-scroll">
+      <ToastContainer />
       <Table columns={columns} dataSource={data} />
     </div>
   );

@@ -9,43 +9,58 @@ import {
   Space,
   Select,
 } from "antd";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function AddTask() {
+  const [form] = Form.useForm();
+  const [visible, setVisible] = useState(false);
+
+  const handleClose = () => {
+    setVisible(false);
+  };
+
+  const notify = () =>
+    toast.success("Task successfully added !", {
+      position: "top-center",
+    });
   const [dateValue, setDateValue] = useState(null);
   const [data, setData] = useState({
     deadline: "",
   });
-  const send = async () => {
+  const send = async (data) => {
     console.log("send");
     try {
       const rawResponse = await fetch(
-        "http://localhost:5000/api/v1/assignTask",
+        "https://pc-builder-sand.vercel.app/api/v1/assignTask",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            title: "details",
-            deadline: "25",
-            details: "details",
-            status: false,
-            assignedMembers: ["tanvir"],
-            assignBy: "tanvir",
-          }),
+          body: JSON.stringify(data),
         }
       );
       const content = await rawResponse.json();
-      console.log("cccc", content);
+      if (content?.status === "success") {
+        setVisible(true);
+        notify();
+        form.resetFields();
+      }
+      // console.log("cccc", content);
     } catch (err) {
       console.log("eeee", err);
     }
   };
-  const onFinish = (values) => {
-    if (values.title && values.password) {
-    }
+  const onFinish = async (values) => {
+    const taskData = {
+      ...data,
+      ...values,
+    };
+    send(taskData);
 
-    console.log("Success:", { ...data, ...values });
+    // console.log("Success:", { ...data, ...values });
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -86,6 +101,8 @@ function AddTask() {
   };
   return (
     <div className="max-lg:overflow-x-scroll">
+      <ToastContainer />
+
       <Form
         name="basic"
         layout="vertical"
@@ -114,12 +131,12 @@ function AddTask() {
         </Form.Item>
 
         <Form.Item
-          label="Description"
-          name="description"
+          label="Details"
+          name="details"
           rules={[
             {
               required: true,
-              message: "Please input desc ription!",
+              message: "Please input desc details!",
             },
           ]}
         >
@@ -143,13 +160,13 @@ function AddTask() {
         </Space>
         {/* select */}
 
-        <p className="my-4">Select Students</p>
+        {/* <p className="my-4">Select Members</p> */}
         <Form.Item
           style={{
             width: "100%",
           }}
-          label="Students"
-          name="students"
+          label="Assign Members"
+          name="assignedMembers"
           direction="vertical"
           rules={[
             {
