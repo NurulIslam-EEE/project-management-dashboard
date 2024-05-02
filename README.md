@@ -8,3 +8,13 @@ This is a [`Project Management Dashboard`](https://projectmanagementdashboard-nu
 <Li>From the task section anyone can see assigned tasks</Li>
 <Li>Tasks take time to load as it is hosted on free site</Li>
  </ul>
+
+### Technical Part:
+
+<ul>
+<Li>Framework: Next.js </Li>
+<Li>State Management: Zustand  </Li>
+<Li>UI Components:  Ant Design </Li>
+<Li>
+Styling: Tailwind CSS  and custom styling .</Li>
+ </ul>
