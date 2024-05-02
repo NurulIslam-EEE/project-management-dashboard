@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   UploadOutlined,
   UserOutlined,
@@ -19,6 +19,7 @@ const items = [
 }));
 import { AudioOutlined } from "@ant-design/icons";
 import { Input, Space } from "antd";
+import axios from "axios";
 const { Search } = Input;
 
 const suffix = (
@@ -29,13 +30,47 @@ const suffix = (
     }}
   />
 );
-const onSearch = (value, _e, info) => console.log(info?.source, value);
+
 const Dashboard = () => {
   const [tab, setTab] = useState(1);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  //
+  const [data, setData] = useState([]);
+  const [data2, setData2] = useState([]);
+
+  const onSearch = (value, _e, info) => {
+    const filtered = data.filter(
+      (data) =>
+        JSON.stringify(data).toLowerCase().indexOf(value.toLowerCase()) !== -1
+    );
+    setData2(filtered);
+    if (value == "") {
+      setData2(data);
+    }
+    // console.log("fff", filtered);
+  };
+
+  // const AssignTasks = useStore((state) => state.tasks);
+  // const setTaskData = useStore((state) => state.setTasks);
+  const fetchData = async () => {
+    const res = await axios.get(
+      "https://pc-builder-sand.vercel.app/api/v1/assignTask"
+    );
+    // console.log("res", res);
+
+    setData(res?.data?.data);
+    setData2(res?.data?.data);
+    // setTaskData(res?.data?.data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <Layout>
       <Sider
@@ -72,13 +107,23 @@ const Dashboard = () => {
           }}
         >
           {/* search */}
-          <Space direction="vertical">
+          <Space
+            direction="vertical"
+            style={{
+              width: "100%",
+              display: "flex",
+
+              justifyContent: "center",
+            }}
+          >
             <Search
               style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                width: "100%",
+                width: "80%",
+                maxWidth: "600px",
+                margin: "0 auto",
               }}
               placeholder="input search text"
               onSearch={onSearch}
@@ -101,7 +146,7 @@ const Dashboard = () => {
             }}
           >
             {tab === 2 && <AddTask />}
-            {tab === 1 && <Tasks />}
+            {tab === 1 && <Tasks data={data2} />}
           </div>
         </Content>
         <Footer

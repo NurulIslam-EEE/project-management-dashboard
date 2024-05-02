@@ -85,25 +85,7 @@ const columns = [
   },
 ];
 
-function Tasks() {
-  const [data, setData] = useState([]);
-
-  // const AssignTasks = useStore((state) => state.tasks);
-  // const setTaskData = useStore((state) => state.setTasks);
-  const fetchData = async () => {
-    const res = await axios.get(
-      "https://pc-builder-sand.vercel.app/api/v1/assignTask"
-    );
-    // console.log("res", res);
-
-    setData(res?.data?.data);
-    // setTaskData(res?.data?.data);
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
+function Tasks({ data }) {
   return (
     <div className="max-lg:overflow-x-scroll">
       <ToastContainer />
