@@ -17,8 +17,22 @@ const items = [
   icon: React.createElement(icon.icon),
   label: icon.title,
 }));
+import { AudioOutlined } from "@ant-design/icons";
+import { Input, Space } from "antd";
+const { Search } = Input;
+
+const suffix = (
+  <AudioOutlined
+    style={{
+      fontSize: 16,
+      color: "#1677ff",
+    }}
+  />
+);
+const onSearch = (value, _e, info) => console.log(info?.source, value);
 const Dashboard = () => {
   const [tab, setTab] = useState(1);
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -52,8 +66,26 @@ const Dashboard = () => {
           style={{
             padding: 0,
             background: colorBgContainer,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-        />
+        >
+          {/* search */}
+          <Space direction="vertical">
+            <Search
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+              }}
+              placeholder="input search text"
+              onSearch={onSearch}
+              enterButton
+            />
+          </Space>
+        </Header>
         <Content
           style={{
             margin: "24px 16px 0",

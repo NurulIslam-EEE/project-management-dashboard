@@ -1,14 +1,10 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This is a [`Project Management Dashboard`](https://projectmanagementdashboard-nurulislameees-projects.vercel.app/).
 
-```
+### How to use
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-
-
-
-
-
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-```
+<ul>
+<Li>Login using any email & password(any)</Li>
+<Li>Task can be added From Add task from dashboard </Li>
+<Li>From the task section anyone can see assigned tasks</Li>
+<Li>Tasks take time to load as it is hosted on free site</Li>
+ </ul>
